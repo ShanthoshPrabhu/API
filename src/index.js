@@ -3,16 +3,16 @@ const cors = require('cors');
 require('dotenv').config();
 const app=express();
 app.use(cors());
-const mongoDB = require('./src/DBConnect')
+const mongoDB = require('./DBConnect')
 
 mongoDB.connectDB();
 
 
 app.use(express.json())
 
-const projectRoute = require('./routes/projectRoute');
-const commentRoute = require('./routes/commentRoute');
-const taskRoute = require('./routes/taskRoute')
+const projectRoute = require('../routes/projectRoute');
+const commentRoute = require('../routes/commentRoute');
+const taskRoute = require('../routes/taskRoute')
 
 
 app.use('/v1/projects',projectRoute)
