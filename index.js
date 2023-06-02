@@ -5,7 +5,7 @@ const app=express();
 app.use(cors());
 const mongoDB = require('./src/DBConnect')
 
-mongoDB.connectDB()
+mongoDB.connectDB();
 
 
 app.use(express.json())
