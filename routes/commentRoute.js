@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const comment = require('../models/commentModel')
+const project = require('../models/projectModel');
 
-  router.get('/getComment', async (req, res) => {
+  router.get('/', async (req, res) => {
     const projectID = req.query.ProjectID; 
     console.log('ProjectID', projectID);
     
@@ -51,15 +52,47 @@ const comment = require('../models/commentModel')
 });
 
   
-  router.delete('/:CommentID', async (req,res)=>{
-    const CommentID = req.body.CommentID;
+  router.delete('', async (req,res)=>{
+    
    
     try {
-       await comment.findOneAndDelete({"CommentID":CommentID});
+       
       res.status(200).json("Comment has been removed...");
     } catch (err){
       res.status(500).json(err);
     }
+  })
+  router.delete('/:CommentID', async (req, res) => {
+    const CommentID = req.params.CommentID;
+    const projectID = req.query.ProjectID;
+    
+    try {
+     
+        await comment.findByIdAndDelete(CommentID)
+      
+      const updateProject = await project.findOneAndUpdate(
+        { "ProjectID": projectID },
+        { $pull: { Comments: CommentID } },
+        { new: true }
+      );
+      
+      res.status(200).json("Task has been removed");
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+  //CommentID
+
+  router.put('/:CommentID', async (req,res)=> {
+    const CommentID = req.params.CommentID;
+    const value = req.body
+    console.log('value',value)
+    const updateTask = await comment.findByIdAndUpdate(
+        CommentID,
+       value,
+      { new: true }
+    );
+    res.status(200).json(updateTask);
   })
 
 //   router.post('/postComment',async((req,res)=>{
